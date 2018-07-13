@@ -1,0 +1,43 @@
+\title{NBA Hackathon Question 1}
+\author{John Yang}
+\date{\today}
+
+\documentclass[11pt]{article}
+\setlength\parindent{0pt}
+
+\begin{document}
+\maketitle
+
+\section{Question}
+\textbf{Prompt}: Calculate the probability that the 2016-2017 Warriors will lose consecutive games. Assume that the probability the Warriors win a game is fixed at 80\%.
+
+\section{Calculations}
+\textbf{Introduction}: Before approaching the problem, there are a couple numbers required for contextualization. We assume that there are a total of 82 games in the NBA's regular season. Given that there is a fixed 80\% chance the Warriors win a single game, there would subsequently be a 20\% chance they lose a game. The probability that the Warriors lose two games in a row would be \((0.20)^2\) = 0.04 or 4\% chance of losing two games in a row. However, this number by itself would not be enough to estimate the cumulative probability for two reasons:
+
+\begin{enumerate}
+	\item The number of consecutive loses is not limited to two. Given \textit{n} games and  \textit{k} losses, there are \({n \choose k}\) ordered ways for the season of n games to play out with k losses and n - k wins.  
+	\item Given a fixed number of losses, there is a specific probability associated with each quantity of losses.
+\end{enumerate}
+
+From these observations, this problem can be modeled as a binomial distribution. By definition, the binomial distribution is the discrete probability distribution of the number of successes given \textit{n} consecutive experiments with a binary set of outcomes. The parameters \textit{n} and \textit{p} would respectively be the number of games and the probability of winning. \\
+
+\textbf{Computation}:
+The formula for calculating the probability of a binomial distribution can be logically arrived upon. To calculate the probability of exactly k successes in n trials, the formula would be:\\ \\
+Pr(n = trials, k = successes, p = prob.) = \({n \choose k} p^k (1-p)^{n-k}\) \\ \\
+With this formula, assuming that a "success" is a loss and "p" would be the probability of losing, we could calculate the probability losing k games given all possible orders of losing those games out of 82. However, in this question, we're focusing on consecutive games.\\
+
+An alternative approach would be to count the number of win-lose sequences that would not lead to two consecutive losses. Given 82 total games and \textit{k} losses, there would be \({83 - k \choose k}\) configurations that avoid consecutive losses. The logic starts with the assumption that given k losses, each loss must be followed by a win except the last game. From k - 1 losses, there would be 2k - 2 guaranteed games from above. There is one single game reflecting the final loss, and then 82 - (2k - 2) - 1 = 83 - 2k unassigned wins. Therefore, in total, there are (k - 1) + 1 + (83 - 2k) = 83 - k "loss containing units" that we can choose losses from. in other words, \({83 - k \choose k}\) choices. \\
+
+Given the number of choices, we can apply the probability formula above as \({83 - k \choose k} 0.20^k 0.80^{(82 - k)}\). We would need to calculate all probabilities of k losses from 0 to 41 losses (given that more than 41 losses would guarantee consecutive losses). Therefore, we could take the summation of probabilities across these range of losses. The final equation would be the following:
+
+\begin{center}
+\(\sum_{k=0}^{41} {83 - k \choose k} 0.20^k 0.80^{(82 - k)}\) = 0.0588168644
+\end{center}
+
+As we can see, there is a 5.88\% chance that the Warriors do not lose consecutive games. Therefore, I would conclude that it is \textbf{highly unlikely the Warriors will \textit{not} lose consecutive games during the regular season}.
+
+\section{Results}
+Statistical Value: 5.88\% chance of not losing consecutive games
+Conclusion: Highly unlikely the Warriors go the whole season without losing consecutive games
+
+\end{document}
